@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Empresa {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  nombre String
+  usuarios Usuario[]
+}
+
+model Usuario {
+  id      Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+  email   String   @unique
+  name    String?
+  password String
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  empresaId Int
+  avatar String @default("/images/dark-noimagen.jpg")
+  propiedaes Propiedades[]
+}
+
+model Tipos {
+  id      Int      @id @default(autoincrement())
+  descripcion String  
+}
+
+model Servicios {
+  id      Int      @id @default(autoincrement())
+  descripcion String  
+  propiedades Propiedades[]
+}
+
+model Paises {
+  id      Int      @id @default(autoincrement())
+  descripcion String  
+  provincias Provincias[]
+}
+
+model Provincias {
+  id      Int      @id @default(autoincrement())  
+  descripcion String  
+  localidades Localidades[]
+  pais Paises @relation(fields: [paisId], references: [id])
+  paisId Int 
+}
+
+model Localidades {
+  id      Int      @id @default(autoincrement())
+  descripcion String  
+  provincia Provincias @relation(fields: [provinciaId], references: [id])
+  provinciaId Int 
+  ubicaciones Ubicaciones[]
+}
+
+model Ubicaciones {
+  id      Int      @id @default(autoincrement())
+  direccion String
+  localidad Localidades @relation(fields: [localidadId], references: [id])
+  localidadId Int 
+  propiedad Propiedades @relation(fields: [propiedadId], references: [id])
+  propiedadId Int  @unique    
+}
+
+
+model Propiedades {
+  id      Int      @id @default(autoincrement())
+  descripcion String
+  ubicacion Ubicaciones?
+  servicios Servicios[]
+  imagenes Imagenes[]
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int   
+}
+
+model Imagenes {
+  id      Int      @id @default(autoincrement())
+  url     String
+  propiedad Propiedades @relation(fields: [propiedadId], references: [id])
+  propiedadId Int 
+}
