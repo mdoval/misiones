@@ -26,7 +26,7 @@ model Usuario {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt  
   email   String   @unique
-  name    String?
+  name    String
   password String
   empresa Empresa @relation(fields: [empresaId], references: [id])
   empresaId Int
