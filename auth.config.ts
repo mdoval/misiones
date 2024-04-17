@@ -18,6 +18,19 @@ export const authConfig = {
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/dashboard', nextUrl));
+      }
+      return true;
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -29,10 +42,16 @@ export const authConfig = {
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;          
-          let usuario = await getUser(email)
-          user = {email: "Juan", password: "pepe"}
-          console.log(user)
+          const { email, password } = parsedCredentials.data;                    
+          let usuario = await getUser(email)          
+          console.log(usuario)
+          const passwordMatch = password === usuario?.password
+          if(passwordMatch) {
+            user = {email: "Juan", password: "pepe"}
+            console.log(user)
+          } else {
+            return null
+          }
         }
         return user
       },

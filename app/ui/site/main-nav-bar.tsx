@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function MainNavBar() {
   return (
     <div className="navbar bg-base-100">
@@ -22,7 +24,7 @@ export default function MainNavBar() {
       </ul>
     </div>
     <div className="navbar-end">
-      <a className="btn">Ingresar</a>
+      <Link className="btn" href="/login">Ingresar</Link>
     </div>
   </div>
   );
