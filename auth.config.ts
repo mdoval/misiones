@@ -1,13 +1,16 @@
-import { Usuario } from "@prisma/client";
+import { User } from "@prisma/client";
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
-import prisma from "@/db/prisma";
+import { passCompare } from "./lib/security";
 
-async function getUser(email: string): Promise<Usuario | null> {
+async function getUser(email: string): Promise<User | undefined> {
   try {
-    const user = await prisma.usuario.findUnique({ where: { email: email } });
-    return user;
+    const user: User | null = await prisma.user.findUnique({
+      where: { email: email },
+    });
+    if (user) return user;
+    else return undefined;
   } catch (error) {
     console.error("Error al buscar usuario:", error);
     throw new Error("Error al buscar usuario.");
@@ -15,18 +18,19 @@ async function getUser(email: string): Promise<Usuario | null> {
 }
 
 export const authConfig = {
+  //adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        return Response.redirect(new URL("/dashboard", nextUrl));
       }
       return true;
     },
@@ -42,18 +46,13 @@ export const authConfig = {
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;                    
-          let usuario = await getUser(email)          
-          console.log(usuario)
-          const passwordMatch = password === usuario?.password
-          if(passwordMatch) {
-            user = {email: "Juan", password: "pepe"}
-            console.log(user)
-          } else {
-            return null
-          }
+          const { email, password } = parsedCredentials.data;
+          let user = await getUser(email);          
+          if(!user) return null;
+          let passMatch = await passCompare(password, user.password)
+          if(passMatch) return user
         }
-        return user
+        return user;
       },
     }),
   ],

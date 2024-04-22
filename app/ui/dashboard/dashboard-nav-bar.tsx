@@ -1,4 +1,4 @@
-import { signOut } from "@/auth";
+import LogoutButton from "../login/logout-button";
 
 export default function DashboardNavBar() {
   return (
@@ -40,15 +40,7 @@ export default function DashboardNavBar() {
         }
       </div>
       <div className="navbar-end">
-      <form
-          action={async () => {
-            "use server";
-            await signOut();
-          }}
-        >
-          <button className="btn">Cerrar Session</button>
-        </form>
-        
+        <LogoutButton />        
       </div>
     </div>
   );

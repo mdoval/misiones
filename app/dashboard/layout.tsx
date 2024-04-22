@@ -8,10 +8,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <DashboardNavBar />
       </div>
       <div className="h-full w-full flex">
-        <div className="h-full bg-green-200">
+        <div className="h-full bg-gray-100">
           <DashboardSideBar />
         </div>
-        <div>{children}</div>
+        <div className="p-2">{children}</div>
       </div>
     </div>
   );
