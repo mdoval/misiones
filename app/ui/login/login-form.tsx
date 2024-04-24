@@ -3,12 +3,13 @@
 import { authenticate } from "@/lib/actions";
 import Link from "next/link";
 import { useFormState } from "react-dom";
+import Alert from "../site/alert";
 
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined)
 
   return (
-    <form action={dispatch} className="bg-blue-200 md:w-1/3 p-5 md:shadow-md flex flex-col space-y-2 rounded-lg">
+    <form action={dispatch} className="bg-blue-200 md:w-1/4 p-5 md:shadow-md flex flex-col space-y-3 rounded-lg">
       <h1 className="md:text-4xl font-bold">Formulario de Login</h1>
       <label className="form-control w-full max-w-xs">
         <div className="label">
@@ -34,7 +35,8 @@ export default function LoginForm() {
         />
       </label>
       <button className="btn btn-primary" type="submit">Ingresar</button>
-      <div className="text-red-600">{errorMessage? errorMessage : ''}</div>
+      {errorMessage? <Alert descripcion="Esto es una prueba" hidden={false} /> : ''}
+      
       <div className="text-center">No tenes cuenta aun? <Link href={"/register"} className="font-semibold">Registrate aca</Link></div>
     </form>    
   );

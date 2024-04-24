@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="h-full bg-gray-100">
           <DashboardSideBar />
         </div>
-        <div className="p-2">{children}</div>
+        <div className="p-2 w-full">{children}</div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
 import { passCompare } from "./lib/security";
 import prisma from "@/db/prisma"
+//import MyAdapter from "./db/MySQLPrismaAdapter";
 //import MySQLPrismaAdapter from '@/db/MySQLPrismaAdapter'
 //import { PrismaAdapter } from "@auth/prisma-adapter";
 
@@ -22,7 +23,7 @@ async function getUser(email: string): Promise<User | undefined> {
 }
 
 export const authConfig = {
-  //adapter: MySQLPrismaAdapter(prisma),
+  //adapter: MyAdapter(prisma),
   pages: {
     signIn: "/login",
   },

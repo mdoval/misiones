@@ -1,3 +1,13 @@
+import { PrismaClient } from "@prisma/client/extension"
+import type { Adapter } from "next-auth/adapters"
+ 
+export default function MyAdapter(prisma: PrismaClient): Adapter {
+  const p = prisma as PrismaClient
+  return {
+    // your adapter methods here
+  }
+}
+
 /*import { PrismaClient, User } from "@prisma/client";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 
