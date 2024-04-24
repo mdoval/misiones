@@ -30,8 +30,8 @@ export default async function TableProvincias({
             return (
               <tr className="hover:bg-base-200" key={provincia.id}>
                 <th>{provincia.id}</th>
-                <td>{provincia.descripcion}</td>
-                <td className="space-x-2">
+                <td className="w-3/4">{provincia.descripcion}</td>
+                <td className="space-x-1">
                   <EditButton id={provincia.id} />
                   <DeleteButton id={provincia.id} />
                 </td>
