@@ -19,3 +19,12 @@ export async function fetchProvinciasFiltradas(query: string, currentPage: numbe
         console.log(error)
     }
 }
+
+export async function fetchProvinciaById(id:string) {
+    try {
+        const provincia = prisma.provincias.findUnique({where: {id: Number(id)}})
+        return provincia
+    } catch( error ) { 
+        console.log(error)
+    }
+}

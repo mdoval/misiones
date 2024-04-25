@@ -1,16 +1,19 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { createProvincia } from "@/lib/actions";
-import { ProvinciaState } from "@/lib/definitions";
+import { updateProvincia } from "@/lib/actions";
+import { ProvinciaForm, ProvinciaState } from "@/lib/definitions";
 import Alert from "../../site/alert";
 
-export default function CreateProvinciaForm() {
+export default function EditProvinciaForm({
+  provincia,
+}: {
+  provincia: ProvinciaForm | undefined | null;
+}) {
+  const id = provincia?.id.toString()
+  const updateProvinciaWithId = updateProvincia.bind(null, id);
   const initialState: ProvinciaState = { message: null, errors: {} };
-  const [erroresDevueltos, dispatch] = useFormState(
-    createProvincia,
-    initialState
-  );
+  const [erroresDevueltos, dispatch] = useFormState(updateProvinciaWithId,initialState);
 
   return (
     <form action={dispatch} className="w-full flex flex-col space-y-4">
@@ -23,6 +26,7 @@ export default function CreateProvinciaForm() {
           placeholder="Ingrese aqui.."
           className="input input-bordered w-1/2"
           name="descripcion"
+          defaultValue={provincia?.descripcion}
         />
         <div className="label">
           {erroresDevueltos.errors?.descripcion &&
@@ -35,7 +39,14 @@ export default function CreateProvinciaForm() {
         <button className="btn btn-primary w-1/6">Guardar</button>
         <button className="btn btn-error w-1/6">Cancelar</button>
       </div>
-      {erroresDevueltos.message? <Alert descripcion={erroresDevueltos.message as string} hidden={false} />: "" }
+      {erroresDevueltos.message ? (
+        <Alert
+          descripcion={erroresDevueltos.message as string}
+          hidden={false}
+        />
+      ) : (
+        ""
+      )}
     </form>
   );
 }

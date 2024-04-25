@@ -1,8 +1,6 @@
 import { fetchProvinciasFiltradas } from "@/lib/data";
-import {
-  DeleteButton,
-  EditButton,
-} from "@/app/ui/dashboard/provincias/buttons";
+import { EditButton } from "@/app/ui/dashboard/provincias/buttons";
+import { DeleteButton } from '@/app/ui/dashboard/provincias/delete-button'
 
 export default async function TableProvincias({
   query,
