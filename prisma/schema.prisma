@@ -31,7 +31,7 @@ model Usuario {
   empresa Empresa @relation(fields: [empresaId], references: [id])
   empresaId Int
   avatar String @default("/images/dark-noimagen.jpg")
-  propiedaes Propiedades[]
+  //propiedaes Propiedades[]
 }
 
 model Tipos {
@@ -83,8 +83,8 @@ model Propiedades {
   ubicacion Ubicaciones?
   servicios Servicios[]
   imagenes Imagenes[]
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId Int   
+  user User @relation(fields: [userId], references: [id])
+  userId String   
 }
 
 model Imagenes {
@@ -126,6 +126,7 @@ model User {
   image         String?
   password      String?
   Account       Account?
+  propiedaes Propiedades[]
   // Optional for WebAuthn support
     createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

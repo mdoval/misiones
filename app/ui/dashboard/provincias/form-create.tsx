@@ -4,6 +4,7 @@ import { useFormState } from "react-dom";
 import { createProvincia } from "@/lib/actions";
 import { ProvinciaState } from "@/lib/definitions";
 import Alert from "../../site/alert";
+import Link from "next/link";
 
 export default function CreateProvinciaForm() {
   const initialState: ProvinciaState = { message: null, errors: {} };
@@ -33,7 +34,7 @@ export default function CreateProvinciaForm() {
       </label>
       <div className="w-full flex space-x-4 justify-end">
         <button className="btn btn-primary w-1/6">Guardar</button>
-        <button className="btn btn-error w-1/6">Cancelar</button>
+        <Link className="btn btn-error w-1/6" href={"/dashboard/provincias"} >Cancelar</Link>
       </div>
       {erroresDevueltos.message? <Alert descripcion={erroresDevueltos.message as string} hidden={false} />: "" }
     </form>

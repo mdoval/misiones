@@ -28,3 +28,32 @@ export async function fetchProvinciaById(id:string) {
         console.log(error)
     }
 }
+
+export async function fetchPropiedadesFiltradas(query: string, currentPage: number) {
+    const ITEMS_PER_PAGE = 8;
+    const SKIP = (currentPage - 1) * ITEMS_PER_PAGE
+    console.log(query)
+    try{
+        const propiedades =  await prisma.propiedades.findMany({
+            where: {
+                descripcion: {
+                    contains: query
+                }
+            },
+            take: ITEMS_PER_PAGE,
+            skip: SKIP
+        })
+        return propiedades
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+export async function fetchPropiedadById(id:string) {
+    try {
+        const propiedad = prisma.propiedades.findUnique({where: {id: Number(id)}})
+        return propiedad
+    } catch( error ) { 
+        console.log(error)
+    }
+}

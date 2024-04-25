@@ -10,3 +10,10 @@ export type ProvinciaForm = {
   descripcion: string;
   paisId: number;
 };
+
+export type FormState = {
+  errors?: {
+    descripcion?: string[];
+  };
+  message?: string | null;
+};
