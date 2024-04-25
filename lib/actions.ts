@@ -10,7 +10,6 @@ import { provinciaCreateSchema } from "./zod";
 import { userFormSchema } from "./zod";
 import { ProvinciaState } from "./definitions";
 
-
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData

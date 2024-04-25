@@ -27,7 +27,7 @@ export default function CreateProvinciaForm() {
         <div className="label">
           {erroresDevueltos.errors?.descripcion &&
             erroresDevueltos.errors.descripcion.map((error: string) => (
-              <span className="label-text-alt text-red-800">{error}</span>
+              <span key={error} className="label-text-alt text-red-800">{error}</span>
             ))}
         </div>
       </label>
