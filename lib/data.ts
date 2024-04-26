@@ -57,3 +57,21 @@ export async function fetchPropiedadById(id:string) {
         console.log(error)
     }
 }
+
+export async function fetchTipos() {
+    try {
+        const tipos = await prisma.tipos.findMany()
+        return tipos
+    } catch( error ) {
+        console.log(error)
+    }
+}
+
+export async function fetchServicios() {
+    try {
+        const servicios = await prisma.servicios.findMany()
+        return servicios
+    } catch( error ) {
+        console.log(error)
+    }
+}

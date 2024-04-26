@@ -153,9 +153,13 @@ export async function createPropiedad(prevState: FormState,formData: FormData) {
 
   if(!user) return {message: "Usuario fuera de Session", errors: {}}
 
+  const tipoId = Number(formData.get('tipo'))
+  console.log(typeof tipoId)
+
   const propiedad = {
     descripcion: formData.get("descripcion"),
     userId: user?.id,
+    tipoId: Number(formData.get('tipo'))
   };
 
   const validacion = propiedadSchema.safeParse(propiedad);
@@ -172,4 +176,29 @@ export async function createPropiedad(prevState: FormState,formData: FormData) {
   }
   revalidatePath("/dashboard/propiedades");
   redirect("/dashboard/propiedades");
+}
+
+export async function updatePropiedad(
+  id: string | undefined, 
+  prevState:FormState, 
+  formData: FormData
+) {
+  //console.log(formData.getAll('checkboxServicios'))
+  const idPropiedad = Number(id)
+  const tipoId = Number(formData.get('tipo'))
+  const descripcion = formData.get('descripcion') as string
+  try {
+    const propiedadActualizada = await prisma.propiedades.update({ 
+      where: {
+        id: idPropiedad
+      },
+      data: {tipoId: tipoId, descripcion: descripcion }
+    })
+  } catch(error) {
+    console.log(error)
+    return prevState
+  }
+  revalidatePath("/dashboard/propiedades");
+  redirect("/dashboard/propiedades");
+//  return prevState
 }

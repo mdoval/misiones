@@ -37,6 +37,7 @@ model Usuario {
 model Tipos {
   id      Int      @id @default(autoincrement())
   descripcion String  
+  propiedades Propiedades[]
 }
 
 model Servicios {
@@ -83,6 +84,8 @@ model Propiedades {
   ubicacion Ubicaciones?
   servicios Servicios[]
   imagenes Imagenes[]
+  tipo Tipos @relation(fields: [tipoId], references: [id])
+  tipoId Int
   user User @relation(fields: [userId], references: [id])
   userId String   
 }
