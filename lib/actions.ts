@@ -209,7 +209,7 @@ export async function updatePropiedad(
 
   try {
     //Elimina los servicios
-    await prisma.$executeRaw`DELETE FROM _propiedadestoservicios WHERE A = ${idPropiedad}`
+    await prisma.$executeRaw`DELETE FROM _PropiedadesToServicios WHERE A = ${idPropiedad}`
     //Vuelve a cargar las propiedades
     const propiedadActualizada = await prisma.propiedades.update({ 
       where: {
