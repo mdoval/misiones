@@ -6,20 +6,17 @@ export default async function EditPropiedad({params}: {params: { id: string };})
   const tipos = await fetchTipos();
   const servicios = await fetchServicios();
   const serviciosSeleccionados = getServiciosSeleccionados(servicios, propiedad?.servicios)
-  //console.log(getServiciosSeleccionados(servicios, propiedad?.servicios))
-
+  
+  //Combina los servicios existentes, con los seleccionados en una propiedad
   function getServiciosSeleccionados(
      servicios: {id:number, descripcion:string}[] | undefined, 
      serviciosSeleccionados: {id:number, descripcion:string}[] | undefined 
     )
     {    
     const res = new Array(servicios?.length).fill(false)
-    console.log(servicios)
     serviciosSeleccionados?.map((servicio: {id:number, descripcion:string}) => {
       res[servicio.id - 1] = true
-      console.log(servicio)
     })    
-    console.log(res)
     return res
   }
 

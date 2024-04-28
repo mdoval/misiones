@@ -9,6 +9,8 @@ import { passHash } from "./security";
 import { propiedadSchema, provinciaCreateSchema } from "./zod";
 import { userFormSchema } from "./zod";
 import { FormState, ProvinciaState } from "./definitions";
+import path from "path";
+import { writeFile } from "fs/promises";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -183,9 +185,15 @@ export async function updatePropiedad(
   prevState:FormState, 
   formData: FormData
 ) {
+  // Id de Propiedad
+  const idPropiedad = Number(id)    
+
+  //Variable de datos para ser actualizados
   let data = {}
+  
+  //Verificacion de servicios
   const servicios = formData.getAll('checkboxServicios')
-  if(servicios.length>0) {
+  if(servicios.length > 0) {
     const serviciosRelacionados: any = []
     servicios.map((servicio) => {
       serviciosRelacionados.push({id: Number(servicio)}
@@ -193,24 +201,20 @@ export async function updatePropiedad(
     })
     data = {...data, servicios:{ connect: serviciosRelacionados} }
   }
-  const idPropiedad = Number(id)    
+
   const tipoId = Number(formData.get('tipo'))
   if(tipoId) data = {...data, tipoId: tipoId}
   const descripcion = formData.get('descripcion') as string
   if(descripcion) data ={...data, descripcion: descripcion}
 
   try {
+    //Elimina los servicios
+    await prisma.$executeRaw`DELETE FROM _propiedadestoservicios WHERE A = ${idPropiedad}`
+    //Vuelve a cargar las propiedades
     const propiedadActualizada = await prisma.propiedades.update({ 
       where: {
         id: idPropiedad
       },
-/*      data: {
-        tipoId: tipoId, 
-        descripcion: descripcion,
-        servicios: {
-          connect: [{id: 1}, {id: 3}]
-        }
-      }*/
       data: data
     })
   } catch(error) {
@@ -220,4 +224,23 @@ export async function updatePropiedad(
   revalidatePath("/dashboard/propiedades");
   redirect("/dashboard/propiedades");
 //  return prevState
+}
+
+export async function subirFotoDePropiedad(formData: FormData) {
+  const idPropiedad = formData.get('id')
+  const file: File | null = formData.get('file') as unknown as File
+  if(!file) console.log("El archivo no subio")
+
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  const filePath = path.join(process.cwd(), "public/images/propiedades", file.name);
+  //console.log(filePath)
+  try {
+    await writeFile(filePath, buffer);
+    console.log('Archivo Subido')
+  } catch(error) {
+    console.log(error)
+  }
+  revalidatePath(`/dashboard/propiedades/${idPropiedad}/edit`);
+  redirect(`/dashboard/propiedades/${idPropiedad}/edit`);
 }
