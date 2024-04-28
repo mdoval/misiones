@@ -1,4 +1,5 @@
 import prisma from '@/db/prisma'
+import { Propiedades } from '@prisma/client';
 
 export async function fetchProvinciasFiltradas(query: string, currentPage: number) {
     const ITEMS_PER_PAGE = 8;
@@ -51,7 +52,15 @@ export async function fetchPropiedadesFiltradas(query: string, currentPage: numb
 
 export async function fetchPropiedadById(id:string) {
     try {
-        const propiedad = prisma.propiedades.findUnique({where: {id: Number(id)}})
+        const propiedad = prisma.propiedades.findUnique(
+            {
+                where: {
+                    id: Number(id)
+                }, include: {
+                    servicios: true
+                }
+            }
+        )
         return propiedad
     } catch( error ) { 
         console.log(error)

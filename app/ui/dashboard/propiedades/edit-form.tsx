@@ -12,6 +12,7 @@ export default function EditPropiedadForm({
   propiedad,
   tipos,
   servicios,
+  serviciosSeleccionados
 }: {
   propiedad:
     | { id: number; descripcion: string; userId: string, tipoId: number }
@@ -19,18 +20,13 @@ export default function EditPropiedadForm({
     | undefined;
   tipos: Tipos[] | undefined;
   servicios: Servicios[] | undefined;
+  serviciosSeleccionados: boolean[]
 }) {
   const id = propiedad?.id.toString()
   const updatePropiedadWithId = updatePropiedad.bind(null, id)
   const initialState: FormState = { message: null, errors: {} };
   const [errors, dispatch] = useFormState(updatePropiedadWithId, initialState);
   
-  /*
-  function handleSubmit(formData: FormData) {
-    const check = formData.getAll('checkboxServicios')
-    console.log(check)
-  }
-*/
   return (
     <form action={dispatch} className="w-full flex flex-col space-y-4">
       <div>
@@ -64,7 +60,7 @@ export default function EditPropiedadForm({
       </div>
       <div className="flex w-full space-x-4">
         <div className="w-1/2">
-          <ServiciosDisponibles servicios={servicios} />
+          <ServiciosDisponibles servicios={servicios} serviciosSeleccionados={serviciosSeleccionados} />
         </div>
         <div className=" w-1/2">
           <GaleriaDeImagenes />
@@ -119,19 +115,19 @@ function UbicacionPropiedad() {
 }
 
 function ServiciosDisponibles({
-  servicios,
+  servicios, serviciosSeleccionados
 }: {
-  servicios: Servicios[] | undefined;
+  servicios: Servicios[] | undefined,
+  serviciosSeleccionados:boolean[]
 }) {
-  const [seleccionados, setSeleccionados] = useState<boolean[]>(
-    new Array(servicios?.length).fill(false)
-  );
+  console.log(serviciosSeleccionados)
+  const [seleccionados, setSeleccionados] = useState<boolean[]>(serviciosSeleccionados);
+  console.log(seleccionados)
 
   const manejarCambioCheckbox = (index: number) => {
     const nuevosSeleccionados = [...seleccionados];
     nuevosSeleccionados[index] = !nuevosSeleccionados[index];
     setSeleccionados(nuevosSeleccionados);
-    console.log(seleccionados);
   };
 
   return (
@@ -147,7 +143,7 @@ function ServiciosDisponibles({
                   id={`checkbox-${servicio.id}`}
                   checked={seleccionados[index]}
                   name={`checkboxServicios`}
-                  //defaultChecked
+                  //defaultChecked                  
                   value={servicio.id}
                   className="checkbox m-2"
                   onChange={() => manejarCambioCheckbox(index)}

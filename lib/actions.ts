@@ -144,12 +144,8 @@ export async function deleteProvincia(id: number, prevState: string) {
 }
 
 export async function createPropiedad(prevState: FormState,formData: FormData) {
-  /*const session = await auth();
-  let user = null;
-  if (session) {
-    user = await getUserByEmail(session.user?.email as string);
-  }*/
   let user = await getUserLogueado()
+  let propiedadNueva = null
 
   if(!user) return {message: "Usuario fuera de Session", errors: {}}
 
@@ -170,12 +166,16 @@ export async function createPropiedad(prevState: FormState,formData: FormData) {
     };
   }
   try {
-    await prisma.propiedades.create({ data: validacion.data });
+    propiedadNueva = await prisma.propiedades.create({ data: validacion.data });
   } catch (error) {
     return { message: "Error en la base de Datos al crear Propiedad" };
   }
-  revalidatePath("/dashboard/propiedades");
-  redirect("/dashboard/propiedades");
+  if(propiedadNueva) {
+    redirect(`/dashboard/propiedades/${propiedadNueva.id}/edit`);
+  } else {
+    revalidatePath("/dashboard/propiedades");
+    redirect(`/dashboard/propiedades`);
+  }
 }
 
 export async function updatePropiedad(
@@ -183,16 +183,35 @@ export async function updatePropiedad(
   prevState:FormState, 
   formData: FormData
 ) {
-  //console.log(formData.getAll('checkboxServicios'))
-  const idPropiedad = Number(id)
+  let data = {}
+  const servicios = formData.getAll('checkboxServicios')
+  if(servicios.length>0) {
+    const serviciosRelacionados: any = []
+    servicios.map((servicio) => {
+      serviciosRelacionados.push({id: Number(servicio)}
+      )
+    })
+    data = {...data, servicios:{ connect: serviciosRelacionados} }
+  }
+  const idPropiedad = Number(id)    
   const tipoId = Number(formData.get('tipo'))
+  if(tipoId) data = {...data, tipoId: tipoId}
   const descripcion = formData.get('descripcion') as string
+  if(descripcion) data ={...data, descripcion: descripcion}
+
   try {
     const propiedadActualizada = await prisma.propiedades.update({ 
       where: {
         id: idPropiedad
       },
-      data: {tipoId: tipoId, descripcion: descripcion }
+/*      data: {
+        tipoId: tipoId, 
+        descripcion: descripcion,
+        servicios: {
+          connect: [{id: 1}, {id: 3}]
+        }
+      }*/
+      data: data
     })
   } catch(error) {
     console.log(error)

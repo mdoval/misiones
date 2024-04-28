@@ -1,5 +1,5 @@
 import { fetchPropiedadesFiltradas } from "@/lib/data";
-//import { EditButton } from "@/app/ui/dashboard/provincias/buttons";
+import { EditButton } from "@/app/ui/dashboard/propiedades/buttons";
 //import { DeleteButton } from '@/app/ui/dashboard/provincias/delete-button'
 
 export default async function TablePropiedades({
@@ -30,7 +30,7 @@ export default async function TablePropiedades({
                 <th>{propiedad.id}</th>
                 <td className="w-3/4">{propiedad.descripcion}</td>
                 <td className="space-x-1">
-                  {/*<EditButton id={propiedad.id} />*/}
+                  <EditButton id={propiedad.id} />
                   {/*<DeleteButton id={propiedad.id} />*/}
                 </td>
               </tr>
