@@ -4,10 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { z } from "zod";
 import { passCompare } from "./lib/security";
 import prisma from "@/db/prisma"
-//import MyAdapter from "./db/MySQLPrismaAdapter";
-//import MySQLPrismaAdapter from '@/db/MySQLPrismaAdapter'
-//import { PrismaAdapter } from "@auth/prisma-adapter";
-
+import { IoReturnDownForwardSharp } from "react-icons/io5";
+import { redirect } from "next/navigation";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -23,7 +21,6 @@ async function getUser(email: string): Promise<User | undefined> {
 }
 
 export const authConfig = {
-  //adapter: MyAdapter(prisma),
   pages: {
     signIn: "/login",
   },
@@ -32,13 +29,8 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      }
-      return true;
+      if(isOnDashboard && !isLoggedIn) return false     
+      return true
     },
   },
   providers: [

@@ -13,27 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Empresa {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  nombre String
-  usuarios Usuario[]
-}
-
-model Usuario {
-  id      Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt  
-  email   String   @unique
-  name    String
-  password String
-  empresa Empresa @relation(fields: [empresaId], references: [id])
-  empresaId Int
-  avatar String @default("/images/dark-noimagen.jpg")
-  //propiedaes Propiedades[]
-}
-
 model Tipos {
   id      Int      @id @default(autoincrement())
   descripcion String  

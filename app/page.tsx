@@ -1,5 +1,5 @@
 import Image from "next/image";
-import MainBanner from "./ui/site/main-banner";
+import { MainBanner2 } from "./ui/site/main-banner";
 import SearchForm from "./ui/site/search-form";
 import MainNavBar from "./ui/site/main-nav-bar";
 
@@ -11,8 +11,7 @@ export default function Home() {
       </div>
       <div className="h-full w-full">
         <div className="h-full w-full flex flex-col">
-          <MainBanner />
-          <SearchForm />
+          <MainBanner2 />
         </div>
       </div>
     </div>

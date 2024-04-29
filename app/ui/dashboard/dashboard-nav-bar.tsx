@@ -1,3 +1,4 @@
+import Link from "next/link";
 import LogoutButton from "../login/logout-button";
 
 export default function DashboardNavBar() {
@@ -40,6 +41,7 @@ export default function DashboardNavBar() {
         }
       </div>
       <div className="navbar-end">
+        <Link className="btn bg-green-600 text-white" href="//">Home Page</Link>
         <LogoutButton />        
       </div>
     </div>

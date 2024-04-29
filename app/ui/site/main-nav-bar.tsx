@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { IoHome } from "react-icons/io5";
+import LoginButton from "./login-button";
 
 export default function MainNavBar() {
   return (
@@ -14,7 +15,7 @@ export default function MainNavBar() {
           <li><a>Departamentos</a></li>
         </ul>
       </div>
-      <a className="btn btn-ghost text-xl">Alquileres en Misiones</a>
+      <a className="btn btn-ghost text-xl"><IoHome /> Alquileres en Misiones</a>
     </div>
     <div className="navbar-center hidden lg:flex">
       <ul className="menu menu-horizontal px-1">
@@ -24,7 +25,7 @@ export default function MainNavBar() {
       </ul>
     </div>
     <div className="navbar-end">
-      <Link className="btn" href="/login">Ingresar</Link>
+      <LoginButton />
     </div>
   </div>
   );
