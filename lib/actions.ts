@@ -10,7 +10,7 @@ import { propiedadSchema, provinciaCreateSchema } from "./zod";
 import { userFormSchema } from "./zod";
 import { FormState, ProvinciaState } from "./definitions";
 import path from "path";
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -227,20 +227,51 @@ export async function updatePropiedad(
 }
 
 export async function subirFotoDePropiedad(formData: FormData) {
-  const idPropiedad = formData.get('id')
+  const idPropiedad: string | undefined = formData.get('id')?.toString()
   const file: File | null = formData.get('file') as unknown as File
   if(!file) console.log("El archivo no subio")
-
+  const fechaHoraActual: string = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+  const nombre = idPropiedad+fechaHoraActual+".jpg"
+  //console.log(nombre)
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-  const filePath = path.join(process.cwd(), "public/images/propiedades", file.name);
+  //const filePath = path.join(process.cwd(), "public/images/propiedades", file.name);
+  const filePath = path.join(process.cwd(), "public/images/propiedades", nombre);
   //console.log(filePath)
   try {
+    let idp: number = 0
+    if(idPropiedad != undefined) idp = parseInt(idPropiedad)
     await writeFile(filePath, buffer);
-    console.log('Archivo Subido')
+    await prisma.propiedades.update({
+      where:{ id : idp }, 
+      data: {
+        imagenes: {
+          create: {url: nombre}
+        }
+      }
+    })
+    //console.log('Archivo Subido')
   } catch(error) {
     console.log(error)
   }
   revalidatePath(`/dashboard/propiedades/${idPropiedad}/edit`);
   redirect(`/dashboard/propiedades/${idPropiedad}/edit`);
+}
+
+export async function eliminarFotoDePropiedad(propiedadid: number,imagenid: number) {
+
+  try {
+    const imagenParaBorrar = await prisma.imagenes.findUnique({where: {id: imagenid}})
+    if(imagenParaBorrar?.url) {
+      const filePath = path.join(process.cwd(), "public/images/propiedades", imagenParaBorrar.url);
+      await unlink(filePath);
+      //console.log(`Deleted ${filePath}`);
+    }    
+    await prisma.imagenes.delete({where: {id: imagenid}})
+    console.log('Imagen Eliminada')
+  } catch(error) {
+    console.log(error)
+  }
+  revalidatePath(`/dashboard/propiedades/${propiedadid}/edit`);
+  redirect(`/dashboard/propiedades/${propiedadid}/edit`);
 }

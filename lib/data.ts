@@ -57,7 +57,8 @@ export async function fetchPropiedadById(id:string) {
                 where: {
                     id: Number(id)
                 }, include: {
-                    servicios: true
+                    servicios: true,
+                    imagenes: true
                 }
             }
         )

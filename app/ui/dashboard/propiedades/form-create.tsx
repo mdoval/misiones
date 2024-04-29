@@ -53,9 +53,6 @@ export default function CreatePropiedadForm({
 }
 
 function SeleccionTipoPropiedad({ tipos }: { tipos: Tipos[] | undefined }) {
-  /*const initialTipo = tipos && tipos.length > 0 ? tipos[0] : null;
-  const [tipo, setTipo] = useState(initialTipo);*/
-
   return (
     <label className="form-control">
       <div className="label">

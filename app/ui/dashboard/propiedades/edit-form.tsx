@@ -1,21 +1,23 @@
 "use client";
 
-import { updatePropiedad, subirFotoDePropiedad } from "@/lib/actions";
+import { updatePropiedad, subirFotoDePropiedad, eliminarFotoDePropiedad } from "@/lib/actions";
 import { FormState } from "@/lib/definitions";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import Alert from "../../site/alert";
 import { Servicios, Tipos } from "@prisma/client";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { useState } from "react";
 import { ModalSmall } from "../../site/modal";
 import { GrGallery } from "react-icons/gr";
 import { GoUpload } from "react-icons/go";
+import Image from "next/image";
 
 export default function EditPropiedadForm({
   propiedad,
   tipos,
   servicios,
   serviciosSeleccionados,
+  imagenes,
 }: {
   propiedad:
     | { id: number; descripcion: string; userId: string; tipoId: number }
@@ -24,6 +26,7 @@ export default function EditPropiedadForm({
   tipos: Tipos[] | undefined;
   servicios: Servicios[] | undefined;
   serviciosSeleccionados: boolean[];
+  imagenes: { id: number; url: string }[] | undefined;
 }) {
   const id = propiedad?.id.toString();
   const updatePropiedadWithId = updatePropiedad.bind(null, id);
@@ -33,6 +36,12 @@ export default function EditPropiedadForm({
   return (
     <div>
       <form action={dispatch} className="w-full flex flex-col space-y-4">
+        <div className="w-full flex space-x-4 justify-end">
+          <button className="btn btn-primary w-1/6">Guardar</button>
+          <Link className="btn btn-error w-1/6" href={"/dashboard/propiedades"}>
+            Cancelar
+          </Link>
+        </div>
         <div>
           <label className="form-control">
             <div className="label">
@@ -70,20 +79,14 @@ export default function EditPropiedadForm({
             />
           </div>
         </div>
-        <div className="w-full flex space-x-4 justify-end">
-          <button className="btn btn-primary w-1/6">Guardar</button>
-          <Link className="btn btn-error w-1/6" href={"/dashboard/propiedades"}>
-            Cancelar
-          </Link>
-        </div>
         {errors.message ? (
           <Alert descripcion={errors.message as string} hidden={false} />
         ) : (
           ""
         )}
       </form>
-      <div className="w-1/2">
-        <GaleriaDeImagenes id={propiedad?.id} />
+      <div className="w-1/2 mt-4">
+        <GaleriaDeImagenes id={propiedad?.id} imagenes={imagenes} />
       </div>
     </div>
   );
@@ -175,28 +178,97 @@ function ServiciosDisponibles({
   );
 }
 
-function GaleriaDeImagenes({id}: {id: number | undefined}) {
+function GaleriaDeImagenes({
+  id,
+  imagenes,
+}: {
+  id: number | undefined;
+  imagenes: { id: number; url: string }[] | undefined;
+}) {
   const [show, setShow] = useState<boolean>(false);
+  const [spinner, setSpinner] = useState<boolean>(false);
+
+  async function dispatch(formData: FormData) {
+    setSpinner(true);
+    await subirFotoDePropiedad(formData);
+    setSpinner(false);
+    setShow(!show);
+  }
 
   return (
-    <div className="card w-3/4 bg-base-100 shadow-xl">
+    <div className="card w-full bg-base-100 shadow-xl">
       <div className="card-body">
-        <h2 className="card-title">Galeria de Imagenes</h2>
-        <button
-          className="btn bg-green-400 w-1/3"
-          onClick={() => setShow(!show)}
-        >
-          <GrGallery />
-          Subir Imagen
-        </button>
+        <div className="flex">
+          <div className="w-1/3">
+            <h2 className="card-title">Galeria de Imagenes</h2>
+            <button
+              className="btn w-full"
+              onClick={() => setShow(!show)}
+            >
+              <GrGallery />
+              Subir Imagen
+            </button>
+          </div>
+          <div className="flex flex-wrap w-full">
+            {imagenes?.map((imagen) => {
+              return <Imagen key={imagen.id} idpropiedad={id} imagen={imagen} />
+            })}
+          </div>
+        </div>
       </div>
       <ModalSmall title="Subir Imagenes" show={show}>
-        <form action={subirFotoDePropiedad} className="flex flex-col">
-          <input type="hidden" value={id} name="id" />
-          <input type="file" className="file-input w-full max-w-xs" name="file" />
-          <button className="btn bg-blue-700 text-white"> <GoUpload /> Subir Imagen</button>
-        </form>
+        <div hidden={spinner}>
+          <form action={dispatch} className="flex flex-col">
+            <input type="hidden" value={id} name="id" />
+            <input
+              type="file"
+              className="file-input w-full max-w-xs"
+              name="file"
+            />
+            <button className="btn bg-blue-700 text-white">
+              <GoUpload /> Subir Imagen
+            </button>
+          </form>
+        </div>
+        <div hidden={!spinner}>
+          <div className="w-full flex flex-col items-center text-center">
+            <h1>Subiendo Imagen</h1>
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        </div>
       </ModalSmall>
     </div>
   );
+}
+
+function Imagen({idpropiedad,imagen}: {idpropiedad: number | undefined, imagen: {id: number; url: string} }) {
+  const [show, setShow] = useState<boolean>(false)
+
+  async function handleSubmit() {    
+    console.log("Eliminando Foto")
+    if(idpropiedad != undefined) {
+      await eliminarFotoDePropiedad(idpropiedad, imagen.id)
+    }
+    setShow(false)
+  }
+
+  function cerrarVentana() {
+    setShow(false)
+  }
+  
+  return (
+    <div className="m-2 border shadow-lg w-28 h-28 bg-white flex align-middle justify-center hover:cursor-pointer" onClick={() => setShow(true)}>
+      <Image src={`/images/propiedades/${imagen.url}`} width={200} height={200} alt={imagen.url} />
+      <ModalSmall title="Quitar Imagen" show={show}>
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-2xl">Desea Eliminar esta imagen ?</h1>
+          <Image src={`/images/propiedades/${imagen.url}`} width={200} height={200} alt={imagen.url} />
+          <div className="flex">
+            <button className="btn bg-blue-800 text-white w-1/2" onClick={() => handleSubmit()}>Si</button>
+            <button className="btn bg-red-800 text-white w-1/2" onClick={() => cerrarVentana()}>No</button>
+          </div>
+        </div>
+      </ModalSmall>
+    </div>
+  )
 }
