@@ -2,6 +2,7 @@ import Image from "next/image";
 import { MainBanner2 } from "./ui/site/main-banner";
 import SearchForm from "./ui/site/search-form";
 import MainNavBar from "./ui/site/main-nav-bar";
+import MapaPrincipal from "./ui/site/map";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <div className="h-full w-full">
         <div className="h-full w-full flex flex-col">
           <MainBanner2 />
+          <MapaPrincipal />
         </div>
       </div>
     </div>

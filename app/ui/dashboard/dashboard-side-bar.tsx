@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { IoHome } from "react-icons/io5";
 
 export default function DashboardSideBar() {

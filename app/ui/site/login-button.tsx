@@ -4,7 +4,7 @@ import { LuLogIn } from "react-icons/lu";
 
 export default async function LoginButton() {
     const session = await auth()
-    console.log(session)
+    //console.log(session)
     if (session === null){
         return <Link className="btn bg-blue-600 text-white" href="/login"><LuLogIn />Ingresar</Link>
     } else {
