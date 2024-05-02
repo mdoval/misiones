@@ -1,8 +1,10 @@
-import Image from "next/image";
 import { MainBanner2 } from "./ui/site/main-banner";
-import SearchForm from "./ui/site/search-form";
 import MainNavBar from "./ui/site/main-nav-bar";
-import MapaPrincipal from "./ui/site/map";
+import dynamic from 'next/dynamic'
+
+const DynamicMap = dynamic(() => import('@/app/ui/map/map'), {
+  ssr: false
+});
 
 export default function Home() {
   return (
@@ -13,7 +15,7 @@ export default function Home() {
       <div className="h-full w-full">
         <div className="h-full w-full flex flex-col">
           <MainBanner2 />
-          <MapaPrincipal />
+          <div><DynamicMap /></div>
         </div>
       </div>
     </div>

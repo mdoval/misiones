@@ -30,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-leaflet": "^3.0.0",
     "autoprefixer": "^10.0.1",
     "daisyui": "^4.10.1",
     "eslint": "^8",
