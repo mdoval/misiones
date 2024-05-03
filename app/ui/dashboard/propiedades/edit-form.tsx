@@ -68,7 +68,7 @@ export default function EditPropiedadForm({
             <SeleccionTipoPropiedad tipos={tipos} value={propiedad?.tipoId} />
           </div>
           <div className="w-1/2">
-            <UbicacionPropiedad />
+            <UbicacionPropiedad id={propiedad?.id} />
           </div>
         </div>
         <div className="flex w-full space-x-4">
@@ -121,11 +121,12 @@ function SeleccionTipoPropiedad({
   );
 }
 
-function UbicacionPropiedad() {
+function UbicacionPropiedad({id}: {id: number | null | undefined}) {
   return (
     <div className="card w-3/4 bg-base-100 shadow-xl">
       <div className="card-body">
         <h2 className="card-title">Ubicacion de la propiedad</h2>
+        <Link href={`/dashboard/propiedades/${id}/location`} className="btn btn-success text-white">Configurar Ubicacion</Link>
       </div>
     </div>
   );

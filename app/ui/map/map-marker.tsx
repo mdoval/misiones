@@ -24,6 +24,5 @@ export default function MapMarker({position, text}: {position:LatLngExpression, 
           {text}
         </Popup>
       </Marker>
-
     )
 }

@@ -50,6 +50,8 @@ model Localidades {
 model Ubicaciones {
   id      Int      @id @default(autoincrement())
   direccion String
+  latitud Float?
+  longitud Float?
   localidad Localidades @relation(fields: [localidadId], references: [id])
   localidadId Int 
   propiedad Propiedades @relation(fields: [propiedadId], references: [id])
