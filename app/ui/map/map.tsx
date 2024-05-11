@@ -1,25 +1,17 @@
 "use client";
 
-import L, { LatLngExpression } from "leaflet";
-import MarkerIcon from "@/node_modules/leaflet/dist/images/marker-icon.png";
-import MarkerShadow from "@/node_modules/leaflet/dist/images/marker-shadow.png";
+import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useState } from "react";
-import MapMarker from "./map-marker";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { ReactNode, useState } from "react";
 
-const Map = () => {
+
+
+const Map = ({children, h, w }: {children: ReactNode, h:number, w: number}) => {
   const [coord, setCoord] = useState<LatLngExpression>([-27.37, -55.92]);
+  
 
-  const SearchLocation = () => {
-    return (
-      <div className="search-location">
-        <input type="text" placeholder="Search Location" />
-      </div>
-    );
-  };
-
-  const GetMyLocation = () => {
+ /* const GetMyLocation = () => {
     const getMyLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -36,10 +28,10 @@ const Map = () => {
       </div>
     );
   };
-
+*/
   return (
     <div>
-      <MapContainer style={{ height: "100vh", width: "100vw" }}
+      <MapContainer style={{ height: `${h}vw`, width: `${w}vw` }}
         center={coord}
         zoom={13}
         scrollWheelZoom={false}
@@ -49,8 +41,7 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapMarker position={[-27.37, -55.92]} text="Icono 1" />
-        <MapMarker position={[-27.40, -55.92]} text="Icono 2" />
+        {children}
 
       </MapContainer>
     </div>
@@ -58,44 +49,3 @@ const Map = () => {
 };
 
 export default Map;
-
-
-/*
-        <Marker
-          icon={
-            new L.Icon({
-              iconUrl: MarkerIcon.src,
-              iconRetinaUrl: MarkerIcon.src,
-              iconSize: [25, 41],
-              iconAnchor: [12.5, 41],
-              popupAnchor: [0, -41],
-              shadowUrl: MarkerShadow.src,
-              shadowSize: [41, 41],
-            })
-          }
-          position={[-27.37, -55.92]}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-
-        <Marker
-          icon={
-            new L.Icon({
-              iconUrl: MarkerIcon.src,
-              iconRetinaUrl: MarkerIcon.src,
-              iconSize: [25, 41],
-              iconAnchor: [12.5, 41],
-              popupAnchor: [0, -41],
-              shadowUrl: MarkerShadow.src,
-              shadowSize: [41, 41],
-            })
-          }
-          position={[-27.40, -55.92]}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-*/

@@ -19,6 +19,8 @@ export default async function TablePropiedades({
           <tr>
             <th></th>
             <th>PROPIEDADES</th>
+            <th>DIRECCION</th>
+            <th>TIPO</th>
             <th>ACCIONES</th>
           </tr>
         </thead>
@@ -29,6 +31,8 @@ export default async function TablePropiedades({
               <tr className="hover:bg-base-200" key={propiedad.id}>
                 <th>{propiedad.id}</th>
                 <td className="w-3/4">{propiedad.descripcion}</td>
+                <td className="w-3/4">{propiedad.address}</td>
+                <td className="w-3/4">{propiedad.tipo.descripcion}</td>
                 <td className="space-x-1">
                   <EditButton id={propiedad.id} />
                   {/*<DeleteButton id={propiedad.id} />*/}

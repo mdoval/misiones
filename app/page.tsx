@@ -1,12 +1,12 @@
 import { MainBanner2 } from "./ui/site/main-banner";
+import MainMap from "./ui/site/main-map";
 import MainNavBar from "./ui/site/main-nav-bar";
-import dynamic from 'next/dynamic'
+import { MainResults } from "./ui/site/main-search-results";
 
-const DynamicMap = dynamic(() => import('@/app/ui/map/map'), {
-  ssr: false
-});
-
-export default function Home() {
+export default async function Home({ searchParams, }: { searchParams?: { query?: string; page?: string };}) {
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
+  
   return (
     <div className="h-full w-full">
       <div className="w-full">
@@ -15,7 +15,12 @@ export default function Home() {
       <div className="h-full w-full">
         <div className="h-full w-full flex flex-col">
           <MainBanner2 />
-          <div><DynamicMap /></div>
+          <div className="p-10">
+            <div className="flex flex-row space-x-5">
+              <MainResults query={query} currentPage={currentPage}  />
+              <MainMap />
+            </div>
+          </div>
         </div>
       </div>
     </div>

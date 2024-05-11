@@ -33,17 +33,42 @@ export async function fetchProvinciaById(id:string) {
 export async function fetchPropiedadesFiltradas(query: string, currentPage: number) {
     const ITEMS_PER_PAGE = 8;
     const SKIP = (currentPage - 1) * ITEMS_PER_PAGE
-    console.log(query)
+    //console.log(query)
     try{
         const propiedades =  await prisma.propiedades.findMany({
+            include: {
+                tipo: true
+            },
             where: {
-                descripcion: {
-                    contains: query
-                }
+                OR: [
+                    {
+                        nombre: { 
+                            contains: query
+                        }
+                    },
+                    {
+                        descripcion: { 
+                            contains: query
+                        }
+                    },
+                    {
+                        address: { 
+                            contains: query
+                        }
+                    },
+                    {
+                        tipo: {
+                            descripcion: {
+                                contains: query
+                            }
+                        }
+                    }
+                ]
             },
             take: ITEMS_PER_PAGE,
             skip: SKIP
         })
+        //console.log(propiedades)
         return propiedades
     } catch(error) {
         console.log(error)

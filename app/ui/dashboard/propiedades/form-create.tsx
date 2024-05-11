@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import Alert from "../../site/alert";
 import { Tipos } from "@prisma/client";
-import { useState } from "react";
 
 export default function CreatePropiedadForm({
   tipos,
@@ -18,6 +17,27 @@ export default function CreatePropiedadForm({
 
   return (
     <form action={dispatch} className="w-full flex flex-col space-y-4">
+      
+      <label className="form-control">
+        <div className="label">
+          <span className="label-text">Nombre de la propiedad</span>
+        </div>
+        <input
+          type="text"
+          className="input input-bordered w-full max-w-xl"
+          placeholder="Bio"
+          name="nombre"
+        />
+        <div className="label">
+          {errors.errors?.nombre &&
+            errors.errors.nombre.map((error: string) => (
+              <span key={error} className="label-text-alt text-red-800">
+                {error}
+              </span>
+            ))}
+        </div>
+      </label>
+
       <label className="form-control">
         <div className="label">
           <span className="label-text">Describa la propiedad</span>

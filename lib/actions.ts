@@ -155,6 +155,7 @@ export async function createPropiedad(prevState: FormState,formData: FormData) {
   console.log(typeof tipoId)
 
   const propiedad = {
+    nombre: formData.get("nombre"),
     descripcion: formData.get("descripcion"),
     userId: user?.id,
     tipoId: Number(formData.get('tipo'))
@@ -274,4 +275,43 @@ export async function eliminarFotoDePropiedad(propiedadid: number,imagenid: numb
   }
   revalidatePath(`/dashboard/propiedades/${propiedadid}/edit`);
   redirect(`/dashboard/propiedades/${propiedadid}/edit`);
+}
+
+export async function updateUbicacion(
+  id: string | undefined, 
+  prevState:FormState, 
+  formData: FormData
+) {
+  // Id de Propiedad
+  const idPropiedad = Number(id)    
+
+  //Variable de datos para ser actualizados
+  let data = {}
+  
+  const address = formData.get('address') as string
+  if(address) data ={...data, address: address}
+
+  const latitud = parseFloat(formData.get('lat') as string)
+  //console.log("latitud" + latitud)
+  if(latitud) data ={...data, latitud: latitud}
+
+  const longitud = parseFloat(formData.get('lng') as string)
+  //console.log("longitud" + longitud)
+  if(longitud) data ={...data, longitud: longitud}
+
+  try {
+    //Vuelve a cargar las propiedades
+    const propiedadActualizada = await prisma.propiedades.update({ 
+      where: {
+        id: idPropiedad
+      },
+      data: data
+    })
+  } catch(error) {
+    console.log(error)
+    return prevState
+  }
+  revalidatePath(`/dashboard/propiedades/${idPropiedad}/edit`);
+  redirect(`/dashboard/propiedades/${idPropiedad}/edit`);
+//  return prevState
 }

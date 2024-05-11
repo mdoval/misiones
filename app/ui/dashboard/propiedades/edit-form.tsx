@@ -121,7 +121,7 @@ function SeleccionTipoPropiedad({
   );
 }
 
-function UbicacionPropiedad({id}: {id: number | null | undefined}) {
+function UbicacionPropiedad({id}: {id: number | null | undefined}) { 
   return (
     <div className="card w-3/4 bg-base-100 shadow-xl">
       <div className="card-body">

@@ -13,6 +13,7 @@ export type ProvinciaForm = {
 
 export type FormState = {
   errors?: {
+    nombre?: string[];
     descripcion?: string[];
   };
   message?: string | null;

@@ -44,31 +44,21 @@ model Localidades {
   descripcion String  
   provincia Provincias @relation(fields: [provinciaId], references: [id])
   provinciaId Int 
-  ubicaciones Ubicaciones[]
 }
-
-model Ubicaciones {
-  id      Int      @id @default(autoincrement())
-  direccion String
-  latitud Float?
-  longitud Float?
-  localidad Localidades @relation(fields: [localidadId], references: [id])
-  localidadId Int 
-  propiedad Propiedades @relation(fields: [propiedadId], references: [id])
-  propiedadId Int  @unique    
-}
-
 
 model Propiedades {
   id      Int      @id @default(autoincrement())
+  nombre String
   descripcion String
-  ubicacion Ubicaciones?
   servicios Servicios[]
   imagenes Imagenes[]
   tipo Tipos @relation(fields: [tipoId], references: [id])
   tipoId Int
   user User @relation(fields: [userId], references: [id])
-  userId String   
+  userId String
+  address String?
+  latitud Float?
+  longitud Float?
 }
 
 model Imagenes {
