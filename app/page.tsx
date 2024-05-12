@@ -20,7 +20,7 @@ export default async function Home({ searchParams, }: { searchParams?: { query?:
           <MainBanner2 />
           <div className="p-10">
             <div className="flex flex-row space-x-5">
-              <MainResults query={query} currentPage={currentPage}  />
+              <MainResults propiedades={propiedades} />
               <MainMap propiedades={propiedades} />
             </div>
           </div>
