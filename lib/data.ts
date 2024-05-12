@@ -33,11 +33,11 @@ export async function fetchProvinciaById(id:string) {
 export async function fetchPropiedadesFiltradas(query: string, currentPage: number) {
     const ITEMS_PER_PAGE = 8;
     const SKIP = (currentPage - 1) * ITEMS_PER_PAGE
-    //console.log(query)
     try{
         const propiedades =  await prisma.propiedades.findMany({
             include: {
-                tipo: true
+                tipo: true,
+                imagenes: true
             },
             where: {
                 OR: [
@@ -68,7 +68,6 @@ export async function fetchPropiedadesFiltradas(query: string, currentPage: numb
             take: ITEMS_PER_PAGE,
             skip: SKIP
         })
-        //console.log(propiedades)
         return propiedades
     } catch(error) {
         console.log(error)

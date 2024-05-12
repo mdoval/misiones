@@ -7,11 +7,13 @@ const DynamicMap = dynamic(() => import("@/app/ui/map/map"), {
   ssr: false,
 });
 
-export default function MainMap() {
+export default function MainMap({propiedades}: {propiedades: any}) {
+
   return (
     <DynamicMap h={40} w={40}>
-      <MapMarker position={[-27.37, -55.92]} text="Icono 1" />
-      <MapMarker position={[-27.4, -55.92]} text="Icono 2" />
+      {propiedades?.map((propiedad: any) => {
+        return <MapMarker position={[propiedad.latitud as number, propiedad.longitud as number]} text={propiedad.nombre} />
+      })}      
     </DynamicMap>
   );
 }
